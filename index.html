@@ -60,6 +60,14 @@
     font-family: var(--serif); font-weight:400; font-size:21px; margin:6px 0 0; color:var(--paper);
   }
   #panel-header .count { font-size:12.5px; color:var(--stone); margin-top:4px; }
+  #district-videos { padding:0 24px 16px; border-bottom:1px solid var(--line); }
+  #district-videos .dv-title { font-size:11.5px; color:var(--stone); margin-bottom:8px; }
+  #district-videos a {
+    display:flex; align-items:flex-start; gap:8px; font-size:12.5px; line-height:1.4;
+    color:#d8d2c4; text-decoration:none; padding:6px 0;
+  }
+  #district-videos a:hover { color:var(--brass); }
+  #district-videos a .play { color:var(--brass); flex-shrink:0; }
   #panel-close {
     position:absolute; top:20px; right:20px; background:none; border:none; color:var(--stone);
     font-size:20px; cursor:pointer; line-height:1;
@@ -263,6 +271,7 @@
       <h2 id="panel-district-name">—</h2>
       <div class="count" id="panel-count"></div>
     </div>
+    <div id="district-videos"></div>
     <div id="jk-list"></div>
     <div id="jk-detail" style="display:none;"></div>
   </div>
@@ -367,6 +376,7 @@ function openDistrict(name, list) {
   jkListEl.style.display = 'block';
   panelDistrictName.textContent = name.replace('район ', '').replace(' район','');
   panelCount.textContent = list.length ? `${list.length} ${plural(list.length)} в списке к экзамену` : 'в этом районе пока нет ЖК в твоём списке';
+  renderDistrictVideos(name);
   jkListEl.innerHTML = '';
   list.forEach(jk => {
     const row = document.createElement('div');
@@ -375,6 +385,69 @@ function openDistrict(name, list) {
     row.addEventListener('click', () => openJK(jk, name));
     jkListEl.appendChild(row);
   });
+}
+
+const DISTRICT_VIDEOS = {
+  'район Хорошёво-Мнёвники': [
+    { title: 'Жильё на любой вкус в центре Москвы / Обзор недвижимости на Шелепихинской набережной', url: 'https://youtu.be/n0rMx1k83xQ?si=aNMYmZsJ6zs546Yf' },
+    { title: 'Новостройки района Хорошевский: SEZAR CITY, Amber City, Indy Towers и другие', url: 'https://youtu.be/sOqoHPl-UXQ?si=0EtD7hz29W6hKcyy' },
+  ],
+  'район Покровское-Стрешнево': [
+    { title: 'Покровское-Стрешнево. 4 жилых комплекса в районе метро Спартак', url: 'https://www.youtube.com/watch?v=W7065ni5nyk' },
+    { title: 'Где лучше купить квартиру в Тушино? Обзор ЖК Sky Garden, City Bay и других проектов', url: 'https://www.youtube.com/watch?v=x0TRphIhupc' },
+    { title: 'Обзор ЖК в Покровское-Стрешнево: Holland Park, Alia и Primavera — сравнение, плюсы, минусы, цены', url: 'https://youtu.be/--O8HxM_q84?si=z_KiOYlex4vcbhqg' },
+    { title: 'Лучшие новостройки 2024 у метро Спартак: Primavera и Alia', url: 'https://www.youtube.com/watch?v=Kvqni0dnNVc' },
+  ],
+  'район Дорогомилово': [
+    { title: 'Обзоры ЖК Москвы. Район Фили: ЖК Береговой, Only, Фили Град, Западный порт, Фили Сити', url: 'https://youtu.be/k-EtZTm2pn8?si=UPyXL9NEcCastdQr' },
+    { title: 'Обзор локации Кутузовский проспект — Можайский район: Родина парк, Set, Veer', url: 'https://www.youtube.com/watch?v=jpYuhbCejaY' },
+    { title: 'Обзор «Set», «Veer», «Родина Парк»', url: 'https://www.youtube.com/watch?v=cTsJxZZut-o' },
+  ],
+  'Можайский район': [
+    { title: 'Обзоры ЖК Москвы. Район Фили: ЖК Береговой, Only, Фили Град, Западный порт, Фили Сити', url: 'https://youtu.be/k-EtZTm2pn8?si=UPyXL9NEcCastdQr' },
+    { title: 'Обзор локации Кутузовский проспект — Можайский район: Родина парк, Set, Veer', url: 'https://www.youtube.com/watch?v=jpYuhbCejaY' },
+    { title: 'Обзор «Set», «Veer», «Родина Парк»', url: 'https://www.youtube.com/watch?v=cTsJxZZut-o' },
+  ],
+  'район Раменки': [
+    { title: 'Раменки. Самый зелёный район Москвы', url: 'https://youtu.be/PqN_3SKDTc8?si=SYh-K9cKuVAMGZRh' },
+    { title: 'Раменки — самый экологичный район?', url: 'https://youtu.be/TmdWwAOGQI8?si=CBHSFKHRoKytMyKk' },
+  ],
+  'Обручевский район': [
+    { title: 'Раменки. Самый зелёный район Москвы', url: 'https://youtu.be/PqN_3SKDTc8?si=SYh-K9cKuVAMGZRh' },
+    { title: 'Раменки — самый экологичный район?', url: 'https://youtu.be/TmdWwAOGQI8?si=CBHSFKHRoKytMyKk' },
+  ],
+  'район Замоскворечье': [
+    { title: 'Даниловский район: новостройки, история, инфраструктура', url: 'https://youtu.be/5aoHE-RYV3Q?si=QOjozRB6tQbmMNHX' },
+    { title: 'Обзор Даниловского района в Москве: ЖК Først, Shagal, Logos, High Life', url: 'https://youtu.be/w0Ao-yNJ7tk?si=LKvPOippaEH9YtYS' },
+    { title: 'Обзор 5 жилых комплексов в районе Острова Мечты', url: 'https://www.youtube.com/watch?v=TuT1JNpWh3k' },
+  ],
+  'Даниловский район': [
+    { title: 'Даниловский район: новостройки, история, инфраструктура', url: 'https://youtu.be/5aoHE-RYV3Q?si=QOjozRB6tQbmMNHX' },
+    { title: 'Обзор Даниловского района в Москве: ЖК Først, Shagal, Logos, High Life', url: 'https://youtu.be/w0Ao-yNJ7tk?si=LKvPOippaEH9YtYS' },
+    { title: 'Обзор 5 жилых комплексов в районе Острова Мечты', url: 'https://www.youtube.com/watch?v=TuT1JNpWh3k' },
+  ],
+  'район Аэропорт': [
+    { title: 'Небольшой, но уютный! Обзор района Савёловский в Москве: ЖК «Петровский парк 2»', url: 'https://www.youtube.com/watch?v=GIsvyqXZbTA' },
+    { title: 'Фильм-обзор района ВДНХ: Союз, Режиссёр, Достижение, Мира, Upside, Монс', url: 'https://www.youtube.com/watch?v=_BWtLTMsBi4&t=417s' },
+  ],
+  'Бутырский район': [
+    { title: 'Небольшой, но уютный! Обзор района Савёловский в Москве: ЖК «Петровский парк 2»', url: 'https://www.youtube.com/watch?v=GIsvyqXZbTA' },
+    { title: 'Фильм-обзор района ВДНХ: Союз, Режиссёр, Достижение, Мира, Upside, Монс', url: 'https://www.youtube.com/watch?v=_BWtLTMsBi4&t=417s' },
+  ],
+};
+
+function renderDistrictVideos(name) {
+  const el = document.getElementById('district-videos');
+  if (!el) return;
+  const videos = DISTRICT_VIDEOS[name];
+  if (!videos || !videos.length) {
+    el.innerHTML = '';
+    return;
+  }
+  el.innerHTML = `
+    <div class="dv-title">Видео о районе</div>
+    ${videos.map(v => `<a href="${v.url}" target="_blank" rel="noopener"><span class="play">▶</span><span>${escapeHtml(v.title)}</span></a>`).join('')}
+  `;
 }
 
 function plural(n) {
