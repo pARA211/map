@@ -1,0 +1,1019 @@
+[
+  {
+    "name": "Sydney City",
+    "status": "matched",
+    "old_coord": [
+      55.779569803054464,
+      37.477078754676924
+    ],
+    "new_coord": [
+      55.7675766,
+      37.5020514
+    ],
+    "moved_m": 2053.7,
+    "match": {
+      "type": "relation",
+      "id": 17736028,
+      "tags": {
+        "alt_name": "ЖК \"Sydney City\"",
+        "full_name": "Жилой комплекс «Sydney City»",
+        "landuse": "residential",
+        "name": "Sydney City",
+        "place": "neighbourhood",
+        "residential": "apartments",
+        "type": "multipolygon"
+      },
+      "score": 0,
+      "dist_km": 2.054
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 17736028,
+        "lat": 55.7675766,
+        "lon": 37.5020514,
+        "tags": {
+          "alt_name": "ЖК \"Sydney City\"",
+          "full_name": "Жилой комплекс «Sydney City»",
+          "landuse": "residential",
+          "name": "Sydney City",
+          "place": "neighbourhood",
+          "residential": "apartments",
+          "type": "multipolygon"
+        },
+        "dist_km": 2.054,
+        "score": 0
+      },
+      {
+        "type": "relation",
+        "id": 10364571,
+        "lat": 55.7663656,
+        "lon": 37.5046287,
+        "tags": {
+          "construction": "residential",
+          "construction:type": "construction",
+          "landuse": "construction",
+          "name": "Жилой комплекс «Sydney City»",
+          "residential": "urban",
+          "type": "multipolygon"
+        },
+        "dist_km": 2.264,
+        "score": 2
+      },
+      {
+        "type": "node",
+        "id": 12032894063,
+        "lat": 55.7647162,
+        "lon": 37.5099131,
+        "tags": {
+          "brand": "ФСК",
+          "contact:phone": "+7 495 1527834",
+          "contact:website": "https://fsk.ru/sydney-city",
+          "name": "Sydney City",
+          "office": "estate_agent",
+          "opening_hours": "Mo-Su 09:00-21:00"
+        },
+        "dist_km": 2.635,
+        "score": 5
+      }
+    ]
+  },
+  {
+    "name": "Амбер сити",
+    "status": "no_match",
+    "old_coord": [
+      55.780029139917275,
+      37.52634774082599
+    ]
+  },
+  {
+    "name": "INDY Towers",
+    "status": "matched",
+    "old_coord": [
+      55.7806716326747,
+      37.532091430915706
+    ],
+    "new_coord": [
+      55.7910455,
+      37.5085339
+    ],
+    "moved_m": 1870.8,
+    "match": {
+      "type": "way",
+      "id": 139611739,
+      "tags": {
+        "barrier": "fence",
+        "construction": "residential",
+        "landuse": "construction",
+        "name": "Жилой комплекс \"Indy Towers\""
+      },
+      "score": 2,
+      "dist_km": 1.871
+    },
+    "all_candidates": [
+      {
+        "type": "way",
+        "id": 139611739,
+        "lat": 55.7910455,
+        "lon": 37.5085339,
+        "tags": {
+          "barrier": "fence",
+          "construction": "residential",
+          "landuse": "construction",
+          "name": "Жилой комплекс \"Indy Towers\""
+        },
+        "dist_km": 1.871,
+        "score": 2
+      }
+    ]
+  },
+  {
+    "name": "Svet",
+    "status": "no_match",
+    "old_coord": [
+      55.87421864457152,
+      37.5218460212826
+    ]
+  },
+  {
+    "name": "Moments",
+    "status": "matched",
+    "old_coord": [
+      55.82425183571286,
+      37.44732039472362
+    ],
+    "new_coord": [
+      55.813463,
+      37.4831164
+    ],
+    "moved_m": 2537.7,
+    "match": {
+      "type": "relation",
+      "id": 6701839,
+      "tags": {
+        "construction": "residential",
+        "contact:website": "https://jk-moments.ru/",
+        "landuse": "construction",
+        "name": "Жилой комплекс \"Moments\"",
+        "type": "multipolygon"
+      },
+      "score": 2,
+      "dist_km": 2.538
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 6701839,
+        "lat": 55.813463,
+        "lon": 37.4831164,
+        "tags": {
+          "construction": "residential",
+          "contact:website": "https://jk-moments.ru/",
+          "landuse": "construction",
+          "name": "Жилой комплекс \"Moments\"",
+          "type": "multipolygon"
+        },
+        "dist_km": 2.538,
+        "score": 2
+      }
+    ]
+  },
+  {
+    "name": "Alia",
+    "status": "matched",
+    "old_coord": [
+      55.82759490564558,
+      37.44685204939451
+    ],
+    "new_coord": [
+      55.8182226,
+      37.4201656
+    ],
+    "moved_m": 1965.9,
+    "match": {
+      "type": "relation",
+      "id": 14573311,
+      "tags": {
+        "construction": "residential",
+        "landuse": "construction",
+        "name": "Жилой комплекс \"Alia\"",
+        "residential": "urban",
+        "type": "multipolygon"
+      },
+      "score": 2,
+      "dist_km": 1.966
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 14573311,
+        "lat": 55.8182226,
+        "lon": 37.4201656,
+        "tags": {
+          "construction": "residential",
+          "landuse": "construction",
+          "name": "Жилой комплекс \"Alia\"",
+          "residential": "urban",
+          "type": "multipolygon"
+        },
+        "dist_km": 1.966,
+        "score": 2
+      }
+    ]
+  },
+  {
+    "name": "City Bay",
+    "status": "matched",
+    "old_coord": [
+      55.82342521180062,
+      37.451328688465004
+    ],
+    "new_coord": [
+      55.8304161,
+      37.4017137
+    ],
+    "moved_m": 3194.8,
+    "match": {
+      "type": "relation",
+      "id": 17222550,
+      "tags": {
+        "landuse": "residential",
+        "name": "Жилой комплекс \"City Bay\"",
+        "residential": "urban",
+        "type": "multipolygon"
+      },
+      "score": 1,
+      "dist_km": 3.195
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 17222550,
+        "lat": 55.8304161,
+        "lon": 37.4017137,
+        "tags": {
+          "landuse": "residential",
+          "name": "Жилой комплекс \"City Bay\"",
+          "residential": "urban",
+          "type": "multipolygon"
+        },
+        "dist_km": 3.195,
+        "score": 1
+      },
+      {
+        "type": "relation",
+        "id": 11760291,
+        "lat": 55.829445,
+        "lon": 37.4036439,
+        "tags": {
+          "construction": "residential",
+          "landuse": "construction",
+          "name": "Жилой комплекс \"City Bay\"",
+          "type": "multipolygon"
+        },
+        "dist_km": 3.053,
+        "score": 2
+      }
+    ]
+  },
+  {
+    "name": "Ривер парк кутузовский",
+    "status": "no_match",
+    "old_coord": [
+      55.74172040971883,
+      37.53278408814588
+    ]
+  },
+  {
+    "name": "Set",
+    "status": "no_match",
+    "old_coord": [
+      55.7022241739235,
+      37.37876600671592
+    ]
+  },
+  {
+    "name": "Veer",
+    "status": "no_match",
+    "old_coord": [
+      55.70230346884497,
+      37.378752841648335
+    ]
+  },
+  {
+    "name": "Will Towers",
+    "status": "matched",
+    "old_coord": [
+      55.695572340259744,
+      37.500827446682194
+    ],
+    "new_coord": [
+      55.7094125,
+      37.4931379
+    ],
+    "moved_m": 1612.6,
+    "match": {
+      "type": "relation",
+      "id": 12381931,
+      "tags": {
+        "landuse": "residential",
+        "name": "Will Towers",
+        "official_name": "Жилой комплекс \"Will Towers\"",
+        "residential": "apartments",
+        "type": "multipolygon",
+        "website": "https://www.willtowers.ru/"
+      },
+      "score": 1,
+      "dist_km": 1.613
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 12381931,
+        "lat": 55.7094125,
+        "lon": 37.4931379,
+        "tags": {
+          "landuse": "residential",
+          "name": "Will Towers",
+          "official_name": "Жилой комплекс \"Will Towers\"",
+          "residential": "apartments",
+          "type": "multipolygon",
+          "website": "https://www.willtowers.ru/"
+        },
+        "dist_km": 1.613,
+        "score": 1
+      }
+    ]
+  },
+  {
+    "name": "Обручева 30",
+    "status": "no_match",
+    "old_coord": [
+      55.65956635923888,
+      37.5193679466631
+    ]
+  },
+  {
+    "name": "Наметкин Тауер",
+    "status": "no_match",
+    "old_coord": [
+      55.67101599411566,
+      37.55862766152518
+    ]
+  },
+  {
+    "name": "High Life",
+    "status": "matched",
+    "old_coord": [
+      55.713498708286245,
+      37.63044045200473
+    ],
+    "new_coord": [
+      55.7258878,
+      37.6457386
+    ],
+    "moved_m": 1678.0,
+    "match": {
+      "type": "way",
+      "id": 909017676,
+      "tags": {
+        "description": "Первая очередь, сдана к 2026",
+        "landuse": "residential",
+        "name": "Жилой комплекс High life Летниковская, 11 (первая очередь)",
+        "operator": "ГК \"Пионер\"",
+        "website": "https://highlife.ru"
+      },
+      "score": 1,
+      "dist_km": 1.678
+    },
+    "all_candidates": [
+      {
+        "type": "way",
+        "id": 909017676,
+        "lat": 55.7258878,
+        "lon": 37.6457386,
+        "tags": {
+          "description": "Первая очередь, сдана к 2026",
+          "landuse": "residential",
+          "name": "Жилой комплекс High life Летниковская, 11 (первая очередь)",
+          "operator": "ГК \"Пионер\"",
+          "website": "https://highlife.ru"
+        },
+        "dist_km": 1.678,
+        "score": 1
+      },
+      {
+        "type": "way",
+        "id": 1472918500,
+        "lat": 55.7246069,
+        "lon": 37.6462208,
+        "tags": {
+          "construction": "residential",
+          "construction:type": "construction",
+          "description": "Вторая очередь, сдача планируется к 2027",
+          "landuse": "construction",
+          "name": "Жилой комплекс High life Летниковская, 11 (вторая очередь)",
+          "operator": "ГК \"Пионер\"",
+          "website": "https://highlife.ru"
+        },
+        "dist_km": 1.582,
+        "score": 2
+      }
+    ]
+  },
+  {
+    "name": "Voxhall",
+    "status": "matched",
+    "old_coord": [
+      55.73566519383681,
+      37.63053816068639
+    ],
+    "new_coord": [
+      55.726804,
+      37.6433328
+    ],
+    "moved_m": 1269.9,
+    "match": {
+      "type": "way",
+      "id": 608728300,
+      "tags": {
+        "landuse": "residential",
+        "name": "Жилой комплекс Voxhall",
+        "operator": "Эталон",
+        "website": "https://voxhall.ru/"
+      },
+      "score": 1,
+      "dist_km": 1.27
+    },
+    "all_candidates": [
+      {
+        "type": "way",
+        "id": 608728300,
+        "lat": 55.726804,
+        "lon": 37.6433328,
+        "tags": {
+          "landuse": "residential",
+          "name": "Жилой комплекс Voxhall",
+          "operator": "Эталон",
+          "website": "https://voxhall.ru/"
+        },
+        "dist_km": 1.27,
+        "score": 1
+      }
+    ]
+  },
+  {
+    "name": "Зиларт",
+    "status": "matched",
+    "old_coord": [
+      55.71745194977068,
+      37.630866389466554
+    ],
+    "new_coord": [
+      55.6971002,
+      37.6393678
+    ],
+    "moved_m": 2324.8,
+    "match": {
+      "type": "way",
+      "id": 1304073654,
+      "tags": {
+        "addr:housenumber": "3",
+        "addr:street": "бульвар Братьев Весниных",
+        "alt_name": "Коллекция. Зиларт",
+        "building": "yes",
+        "building:levels": "5",
+        "building:material": "metal_plates",
+        "building:use": "cultural",
+        "contact:email": "welcome@zilartmuseum.ru",
+        "contact:phone": "+7 495 139-93-31",
+        "contact:website": "https://zilartmuseum.ru",
+        "height": "36",
+        "museum": "art",
+        "name": "ЗИЛАРТ",
+        "official_name": "Музейно-выставочный центр «ЗИЛАРТ»",
+        "opening_hours": "Tu-Su 10:00-22:00; Mo off",
+        "start_date": "2025",
+        "toilets": "yes",
+        "tourism": "museum",
+        "wheelchair": "designated"
+      },
+      "score": 3,
+      "dist_km": 2.325
+    },
+    "all_candidates": [
+      {
+        "type": "way",
+        "id": 1304073654,
+        "lat": 55.6971002,
+        "lon": 37.6393678,
+        "tags": {
+          "addr:housenumber": "3",
+          "addr:street": "бульвар Братьев Весниных",
+          "alt_name": "Коллекция. Зиларт",
+          "building": "yes",
+          "building:levels": "5",
+          "building:material": "metal_plates",
+          "building:use": "cultural",
+          "contact:email": "welcome@zilartmuseum.ru",
+          "contact:phone": "+7 495 139-93-31",
+          "contact:website": "https://zilartmuseum.ru",
+          "height": "36",
+          "museum": "art",
+          "name": "ЗИЛАРТ",
+          "official_name": "Музейно-выставочный центр «ЗИЛАРТ»",
+          "opening_hours": "Tu-Su 10:00-22:00; Mo off",
+          "start_date": "2025",
+          "toilets": "yes",
+          "tourism": "museum",
+          "wheelchair": "designated"
+        },
+        "dist_km": 2.325,
+        "score": 3
+      },
+      {
+        "type": "relation",
+        "id": 19782954,
+        "lat": 55.6964191,
+        "lon": 37.6370331,
+        "tags": {
+          "building": "apartments",
+          "name": "ЖК \"Зиларт-Гранд\" (дом 18)",
+          "type": "building"
+        },
+        "dist_km": 2.37,
+        "score": 3
+      },
+      {
+        "type": "relation",
+        "id": 12769223,
+        "lat": 55.6972057,
+        "lon": 37.6370649,
+        "tags": {
+          "name": "Жилой комплекс «ЗИЛАРТ»",
+          "place": "neighbourhood",
+          "type": "multipolygon",
+          "website": "https://www.lsr.ru/msk/zhilye-kompleksy/zilart/"
+        },
+        "dist_km": 2.285,
+        "score": 4
+      },
+      {
+        "type": "relation",
+        "id": 19785496,
+        "lat": 55.696603,
+        "lon": 37.6313346,
+        "tags": {
+          "addr:city": "Москва",
+          "building": "construction",
+          "construction": "apartments",
+          "construction:addr:housenumber": "23",
+          "construction:addr:street": "ЖК Зиларт",
+          "name": "ЖК Зиларт (дом 23)",
+          "type": "multipolygon"
+        },
+        "dist_km": 2.318,
+        "score": 6
+      },
+      {
+        "type": "relation",
+        "id": 19785492,
+        "lat": 55.6962456,
+        "lon": 37.6326874,
+        "tags": {
+          "addr:city": "Москва",
+          "building": "construction",
+          "construction": "apartments",
+          "construction:addr:housenumber": "24",
+          "construction:addr:street": "ЖК Зиларт",
+          "name": "ЖК Зиларт (дом 24)",
+          "type": "multipolygon"
+        },
+        "dist_km": 2.361,
+        "score": 6
+      },
+      {
+        "type": "relation",
+        "id": 19782953,
+        "lat": 55.695743,
+        "lon": 37.6386749,
+        "tags": {
+          "building": "construction",
+          "construction": "apartments",
+          "name": "ЖК \"Зиларт-Спарк\" (дом 21)",
+          "type": "building"
+        },
+        "dist_km": 2.463,
+        "score": 6
+      }
+    ]
+  },
+  {
+    "name": "Shagal",
+    "status": "matched",
+    "old_coord": [
+      55.7155876476853,
+      37.627273778884884
+    ],
+    "new_coord": [
+      55.6917114,
+      37.6446534
+    ],
+    "moved_m": 2869.6,
+    "match": {
+      "type": "relation",
+      "id": 19870919,
+      "tags": {
+        "landuse": "residential",
+        "name": "Жилой квартал Shagal",
+        "type": "multipolygon"
+      },
+      "score": 1,
+      "dist_km": 2.87
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 19870919,
+        "lat": 55.6917114,
+        "lon": 37.6446534,
+        "tags": {
+          "landuse": "residential",
+          "name": "Жилой квартал Shagal",
+          "type": "multipolygon"
+        },
+        "dist_km": 2.87,
+        "score": 1
+      }
+    ]
+  },
+  {
+    "name": "Era",
+    "status": "matched",
+    "old_coord": [
+      55.7166680226363,
+      37.632293026393036
+    ],
+    "new_coord": [
+      55.7206426,
+      37.6456515
+    ],
+    "moved_m": 946.2,
+    "match": {
+      "type": "relation",
+      "id": 7253187,
+      "tags": {
+        "construction": "residential",
+        "contact:website": "https://era.center/",
+        "landuse": "construction",
+        "name": "Жилой комплекс Era",
+        "type": "multipolygon"
+      },
+      "score": 2,
+      "dist_km": 0.946
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 7253187,
+        "lat": 55.7206426,
+        "lon": 37.6456515,
+        "tags": {
+          "construction": "residential",
+          "contact:website": "https://era.center/",
+          "landuse": "construction",
+          "name": "Жилой комплекс Era",
+          "type": "multipolygon"
+        },
+        "dist_km": 0.946,
+        "score": 2
+      },
+      {
+        "type": "relation",
+        "id": 14732079,
+        "lat": 55.7650163,
+        "lon": 37.6358766,
+        "tags": {
+          "addr:housenumber": "2",
+          "addr:street": "Фролов переулок",
+          "amenity": "theatre",
+          "building": "yes",
+          "building:colour": "darksalmon",
+          "building:levels": "7",
+          "contact:phone": "+7 495 7817811",
+          "contact:website": "http://et-cetera.ru/",
+          "email": "teatreetcetera@gmail.com",
+          "name": "Et Cetera",
+          "opening_hours": "Mo-Su 11:00-20:30",
+          "operator": "ГБУК «Московский театр «ET CETERA» под руководством Александра Калягина»",
+          "ref:mkrf_theaters": "12001",
+          "roof:material": "metal",
+          "type": "multipolygon",
+          "wikidata": "Q4038231",
+          "wikipedia": "ru:Et cetera (театр)"
+        },
+        "dist_km": 5.381,
+        "score": 3
+      }
+    ]
+  },
+  {
+    "name": "1-й Нагатинский",
+    "status": "matched",
+    "old_coord": [
+      55.66352824534153,
+      37.64423656221937
+    ],
+    "new_coord": [
+      55.6826971,
+      37.6270111
+    ],
+    "moved_m": 2389.5,
+    "match": {
+      "type": "way",
+      "id": 1134730048,
+      "tags": {
+        "landuse": "residential",
+        "name": "Жилой комплекс \"1-й Нагатинский\""
+      },
+      "score": 1,
+      "dist_km": 2.39
+    },
+    "all_candidates": [
+      {
+        "type": "way",
+        "id": 1134730048,
+        "lat": 55.6826971,
+        "lon": 37.6270111,
+        "tags": {
+          "landuse": "residential",
+          "name": "Жилой комплекс \"1-й Нагатинский\""
+        },
+        "dist_km": 2.39,
+        "score": 1
+      }
+    ]
+  },
+  {
+    "name": "Twelve",
+    "status": "no_match",
+    "old_coord": [
+      55.677293812103265,
+      37.61168185001544
+    ]
+  },
+  {
+    "name": "Soul",
+    "status": "matched",
+    "old_coord": [
+      55.80106376568807,
+      37.5551550283382
+    ],
+    "new_coord": [
+      55.8124282,
+      37.5223433
+    ],
+    "moved_m": 2408.5,
+    "match": {
+      "type": "relation",
+      "id": 19050887,
+      "tags": {
+        "construction": "residential",
+        "landuse": "construction",
+        "name": "Жилой комплекс \"Soul\"",
+        "type": "multipolygon"
+      },
+      "score": 2,
+      "dist_km": 2.409
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 19050887,
+        "lat": 55.8124282,
+        "lon": 37.5223433,
+        "tags": {
+          "construction": "residential",
+          "landuse": "construction",
+          "name": "Жилой комплекс \"Soul\"",
+          "type": "multipolygon"
+        },
+        "dist_km": 2.409,
+        "score": 2
+      }
+    ]
+  },
+  {
+    "name": "Upside Towers",
+    "status": "matched",
+    "old_coord": [
+      55.81118023773577,
+      37.58911650519008
+    ],
+    "new_coord": [
+      55.8118866,
+      37.6090358
+    ],
+    "moved_m": 1247.1,
+    "match": {
+      "type": "relation",
+      "id": 12371521,
+      "tags": {
+        "construction": "apartments",
+        "contact:website": "https://upside-towers.ru/",
+        "landuse": "construction",
+        "name": "Upside towers",
+        "note": "высота 198.95",
+        "opening_date": "2026 Q3",
+        "type": "multipolygon"
+      },
+      "score": 2,
+      "dist_km": 1.247
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 12371521,
+        "lat": 55.8118866,
+        "lon": 37.6090358,
+        "tags": {
+          "construction": "apartments",
+          "contact:website": "https://upside-towers.ru/",
+          "landuse": "construction",
+          "name": "Upside towers",
+          "note": "высота 198.95",
+          "opening_date": "2026 Q3",
+          "type": "multipolygon"
+        },
+        "dist_km": 1.247,
+        "score": 2
+      }
+    ]
+  },
+  {
+    "name": "Союз",
+    "status": "matched",
+    "old_coord": [
+      55.83109671184572,
+      37.6479865349429
+    ],
+    "new_coord": [
+      55.8385657,
+      37.641543
+    ],
+    "moved_m": 922.8,
+    "match": {
+      "type": "relation",
+      "id": 17723014,
+      "tags": {
+        "contact:website": "https://союз.москва/",
+        "landuse": "residential",
+        "name": "Жилой комплекс «Союз»",
+        "opening_date": "2024 Q4",
+        "start_date": "2025",
+        "type": "multipolygon"
+      },
+      "score": 1,
+      "dist_km": 0.923
+    },
+    "all_candidates": [
+      {
+        "type": "relation",
+        "id": 17723014,
+        "lat": 55.8385657,
+        "lon": 37.641543,
+        "tags": {
+          "contact:website": "https://союз.москва/",
+          "landuse": "residential",
+          "name": "Жилой комплекс «Союз»",
+          "opening_date": "2024 Q4",
+          "start_date": "2025",
+          "type": "multipolygon"
+        },
+        "dist_km": 0.923,
+        "score": 1
+      },
+      {
+        "type": "relation",
+        "id": 14450823,
+        "lat": 55.8304827,
+        "lon": 37.628275,
+        "tags": {
+          "addr:housenumber": "119 с12",
+          "addr:street": "проспект Мира",
+          "building": "yes",
+          "building:levels": "4",
+          "name": "Павильон № 12. \"Выставочный центр профсоюзов\"",
+          "name:en": "Pavilion No 12. \"Exhibition Centre of Trade Unions\"",
+          "name:ru": "Павильон № 12. \"Выставочный центр профсоюзов\"",
+          "opening_hours": "Mo-Fr 10:00-18:00; Sa-Su 10:00-19:00",
+          "tourism": "attraction",
+          "type": "multipolygon"
+        },
+        "dist_km": 1.233,
+        "score": 3
+      },
+      {
+        "type": "way",
+        "id": 1556523994,
+        "lat": 55.8345851,
+        "lon": 37.6284077,
+        "tags": {
+          "addr:housenumber": "119 с61",
+          "addr:street": "проспект Мира",
+          "building": "yes",
+          "building:architecture": "stalinist_neoclassicism",
+          "building:levels": "2",
+          "name": "Павильон № 61. \"Центросоюз\"",
+          "name:en": "Pavilion No 61. \"Tsentrosoyuz\"",
+          "name:ru": "Павильон № 61. \"Центросоюз\"",
+          "roof:shape": "many",
+          "tourism": "attraction",
+          "wikidata": "Q48949021"
+        },
+        "dist_km": 1.283,
+        "score": 3
+      },
+      {
+        "type": "relation",
+        "id": 18372797,
+        "lat": 55.8276445,
+        "lon": 37.6267445,
+        "tags": {
+          "addr:housenumber": "119 с7",
+          "addr:street": "проспект Мира",
+          "building": "yes",
+          "building:levels": "3",
+          "contact:telegram": "https://t.me/souzmultpark_vdnh",
+          "contact:vk": "https://vk.com/souzmultpark.vdnh",
+          "email": "souzmultpark@souzmult.ru",
+          "name": "Павильон № 7. \"Союзмультпарк\"",
+          "name:en": "Pavilion No 7. \"Souyzmulfilm\"",
+          "name:ru": "Павильон № 7. \"Союзмультпарк\"",
+          "old_name:en": "Pavilion № 7, \"Seeds\"",
+          "old_name:ru": "Павильон № 7 «Семена» на ВДНХ",
+          "phone": "+74958590125",
+          "tourism": "attraction",
+          "type": "multipolygon",
+          "website": "https://souzmultpark.ru/",
+          "wikidata": "Q48948743",
+          "wikipedia": "ru:Павильон № 7 «Семена» на ВДНХ"
+        },
+        "dist_km": 1.381,
+        "score": 3
+      }
+    ]
+  },
+  {
+    "name": "Роттердам",
+    "status": "matched",
+    "old_coord": [
+      55.663935286807664,
+      37.645013246166876
+    ],
+    "new_coord": [
+      55.68588,
+      37.624741
+    ],
+    "moved_m": 2751.4,
+    "match": {
+      "type": "node",
+      "id": 12032894062,
+      "tags": {
+        "brand": "ФСК",
+        "name": "Роттердам",
+        "office": "estate_agent",
+        "contact:website": "https://fsk.ru/rotterdam"
+      },
+      "score": 5,
+      "dist_km": 2.751
+    },
+    "all_candidates": []
+  },
+  {
+    "name": "Jois",
+    "status": "matched",
+    "old_coord": [
+      55.78018724265219,
+      37.47304785257356
+    ],
+    "new_coord": [
+      55.7731296,
+      37.5083581
+    ],
+    "moved_m": 2343.5,
+    "match": {
+      "type": "relation",
+      "id": 17287641,
+      "tags": {
+        "construction": "apartments",
+        "landuse": "construction",
+        "name": "Жилой комплекс «Jois»",
+        "contact:website": "https://jois.moscow/"
+      },
+      "score": 2,
+      "dist_km": 2.344
+    },
+    "all_candidates": []
+  }
+]
