@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ЖК Москвы наизусть</title>
+<title>HIGH POINT — каталог ЖК Москвы</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
@@ -11,17 +12,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 <style>
   :root {
-    --bg: #14130f;
-    --panel: #1d1b16;
-    --panel-2: #241f18;
-    --stone: #948b78;
-    --stone-dim: #625b4c;
-    --paper: #ece5d6;
-    --brass: #c8a15c;
-    --brass-dim: #8a6f3f;
-    --line: #37322641;
-    --serif: Georgia, 'Times New Roman', Cambria, serif;
-    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    /* светлая палитра в духе Яндекс.Карт/Циан + красный акцент HIGH POINT */
+    --bg: #eef0f2;
+    --panel: #ffffff;
+    --panel-2: #f2f3f5;
+    --stone: #6b7280;
+    --stone-dim: #9aa1ab;
+    --paper: #1c1c1c;
+    --brass: #a10f0f;
+    --brass-dim: #d97373;
+    --accent: #770000;
+    --line: #e4e6e9;
+    --shadow: 0 2px 16px rgba(20,20,20,0.12);
+    --shadow-lg: 0 12px 32px rgba(20,20,20,0.16);
+    --serif: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    --sans: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
   * { box-sizing: border-box; }
   html, body { margin:0; padding:0; height:100%; background:var(--bg); font-family: var(--sans); color: var(--paper); overflow:hidden; }
@@ -35,13 +40,51 @@
     position:absolute; top:20px; left:24px; z-index:500;
     pointer-events:none;
     background: var(--panel); border:1px solid var(--line);
-    padding: 12px 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    padding: 11px 20px; box-shadow: var(--shadow);
   }
   #title h1 {
-    font-family: var(--serif); font-weight:400; font-size:22px; letter-spacing:0.3px;
-    margin:0; color:var(--paper);
+    display:flex; align-items:center; gap:7px;
+    font-family: var(--sans); font-weight:700; font-size:14.5px; text-transform:uppercase;
+    letter-spacing:0.6px; margin:0; color:var(--paper);
   }
-  #title p { margin:4px 0 0; font-size:12.5px; color:var(--stone); }
+  #title h1 .brand-logo-inline { height:26px; width:auto; display:block; border-radius:2px; }
+  #title p { margin:5px 0 0; font-size:12px; color:var(--stone); }
+
+  /* отдельная панель поиска ЖК по названию */
+  /* поиск ЖК — сворачивается в кружок с лупой, разворачивается по наведению/фокусу */
+  #jk-search { position:absolute; top:20px; right:24px; z-index:550; }
+  .jk-search-bar {
+    position:relative; display:flex; align-items:center; height:44px; width:44px; border-radius:22px;
+    background:var(--panel); border:1px solid var(--line); box-shadow: var(--shadow);
+    overflow:hidden; transition: width .25s ease;
+  }
+  #jk-search:hover .jk-search-bar, #jk-search:focus-within .jk-search-bar { width:300px; }
+  .jk-search-icon-btn {
+    width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    background:none; border:none; color:var(--brass); cursor:pointer; padding:0;
+  }
+  #jk-search-input {
+    flex:1; min-width:0; border:none; outline:none; background:transparent; color:var(--paper);
+    font-family: var(--sans); font-size:13px; padding:0; opacity:0; transition: opacity .15s ease;
+  }
+  #jk-search:hover #jk-search-input, #jk-search:focus-within #jk-search-input { opacity:1; padding-right:14px; }
+  #jk-search-input::placeholder { color:var(--stone); }
+  #jk-search-results {
+    display:none; position:absolute; top:50px; right:0; width:300px;
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    box-shadow: var(--shadow-lg); max-height:340px; overflow-y:auto;
+  }
+  #jk-search:hover #jk-search-results, #jk-search:focus-within #jk-search-results { display:block; }
+  #jk-search-results.hidden { display:none !important; }
+  .jk-search-row {
+    display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    padding:10px 14px; cursor:pointer; border-bottom:1px solid var(--line);
+  }
+  .jk-search-row:last-child { border-bottom:none; }
+  .jk-search-row:hover, .jk-search-row.active { background:var(--panel-2); }
+  .jk-search-row .name { font-family: var(--serif); font-size:14px; color:var(--paper); }
+  .jk-search-row .meta { font-size:11.5px; color:var(--stone); white-space:nowrap; flex-shrink:0; }
+  .jk-search-empty { padding:12px 14px; font-size:12.5px; color:var(--stone); }
 
   /* правая панель */
   #panel {
@@ -65,7 +108,7 @@
   #district-videos .dv-title { font-size:11.5px; color:var(--stone); margin-bottom:8px; }
   #district-videos a {
     display:flex; align-items:flex-start; gap:8px; font-size:12.5px; line-height:1.4;
-    color:#d8d2c4; text-decoration:none; padding:6px 0;
+    color:var(--paper); text-decoration:none; padding:6px 0;
   }
   #district-videos a:hover { color:var(--brass); }
   #district-videos a .play { color:var(--brass); flex-shrink:0; }
@@ -113,7 +156,7 @@
     font-size:11.5px; color:var(--stone); border-top:1px solid var(--line);
     padding-top:14px; margin: 18px 0 8px;
   }
-  #jk-detail .long-text { font-size:12.5px; line-height:1.55; color:#d8d2c4; white-space:pre-line; }
+  #jk-detail .long-text { font-size:12.5px; line-height:1.55; color:var(--paper); white-space:pre-line; }
 
   /* инфраструктура рядом (в карточке ЖК) */
   .infra-list { margin-top:2px; }
@@ -182,7 +225,7 @@
     display:flex; align-items:flex-start; gap:8px; padding:6px 0;
   }
   .video-list .video-row a {
-    flex:1; font-size:12.5px; line-height:1.4; color:#d8d2c4; text-decoration:none;
+    flex:1; font-size:12.5px; line-height:1.4; color:var(--paper); text-decoration:none;
     display:flex; align-items:flex-start; gap:8px;
   }
   .video-list .video-row a:hover { color:var(--brass); }
@@ -210,33 +253,75 @@
   .video-add-toggle:hover { background:var(--brass-dim); }
   .video-add-form.collapsed { display:none; }
 
-  /* переключатели слоёв инфраструктуры OSM */
-  #infra-toggles {
-    position:absolute; top:112px; left:24px; z-index:500;
-    background: var(--panel); border:1px solid var(--line);
-    padding:12px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    min-width:210px;
+  /* горизонтальная панель фильтров — пилюли с попапами, в духе Яндекс.Карт/Циан */
+  #filter-bar {
+    position:absolute; top:98px; left:24px; z-index:500;
+    display:flex; align-items:center; flex-wrap:wrap; gap:8px;
   }
-  #infra-toggles.collapsed { padding:8px 16px; min-width:0; }
-  #infra-toggles-body { display:flex; flex-direction:column; gap:7px; margin-top:10px; }
-  #infra-toggles.collapsed #infra-toggles-body { display:none; }
-  #infra-toggles-header {
-    display:flex; align-items:center; justify-content:space-between; gap:14px;
-    cursor:pointer; user-select:none;
+  .filter-btn-wrap { position:relative; }
+  .filter-btn {
+    display:flex; align-items:center; gap:7px; font-family:var(--sans); font-size:13px; font-weight:600;
+    color:var(--paper); background:var(--panel); border:1px solid var(--line); border-radius:20px;
+    padding:9px 15px; cursor:pointer; box-shadow: var(--shadow); white-space:nowrap;
+    transition: border-color .15s, color .15s;
   }
-  #infra-toggles-header .infra-toggles-title { margin-bottom:0; }
-  #infra-toggles-header .collapse-bar {
-    width:22px; height:2px; border-radius:2px; background:var(--stone-dim); flex-shrink:0;
+  .filter-btn:hover { border-color:var(--brass-dim); color:var(--brass); }
+  .filter-btn .chev { color:var(--stone-dim); transition: transform .15s; flex-shrink:0; }
+  .filter-btn-wrap.open .filter-btn { border-color:var(--brass); color:var(--brass); }
+  .filter-btn-wrap.open .filter-btn .chev { transform: rotate(180deg); }
+  .filter-btn.has-active { border-color:var(--accent); color:var(--accent); background:#fdf0f0; }
+  .filter-btn.has-active .chev { color:var(--accent); }
+
+  .filter-popover {
+    display:none; position:absolute; top:calc(100% + 8px); left:0; z-index:560;
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    box-shadow: var(--shadow-lg); padding:14px 16px; min-width:230px;
+    max-height:70vh; overflow-y:auto;
   }
-  #infra-toggles-header:hover .collapse-bar { background:var(--brass-dim); }
-  .infra-toggles-title { font-family: var(--serif); font-size:13px; color:var(--brass); margin-bottom:2px; }
-  .infra-toggle-row { display:flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px; color:var(--paper); }
+  .filter-btn-wrap.open .filter-popover { display:flex; flex-direction:column; }
+  .filter-popover-title {
+    font-family: var(--serif); font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;
+    color:var(--brass); margin:12px 0 6px;
+  }
+  .filter-popover-title:first-child { margin-top:0; }
+
+  .infra-toggle-row { display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; color:var(--paper); padding:5px 0; }
   .infra-toggle-row input { accent-color: var(--brass); cursor:pointer; margin:0; }
   .infra-toggle-row .dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
   .infra-count { color:var(--stone); margin-left:auto; font-size:11px; }
-  .infra-toggle-divider { border-top:1px solid var(--line); margin:1px 0; }
-  .infra-zoom-hint { font-size:11px; color:var(--brass); padding-top:2px; border-top:1px solid var(--line); margin-top:2px; }
+  .infra-zoom-hint { font-size:11px; color:var(--brass); padding-top:8px; margin-top:4px; border-top:1px solid var(--line); }
   .infra-zoom-hint.hidden { display:none; }
+
+  .price-quick-row { display:flex; flex-wrap:wrap; gap:6px; }
+  .price-quick-btn {
+    font-family: var(--sans); font-size:12.5px; color:var(--paper);
+    background:var(--panel-2); border:1px solid var(--line); border-radius:16px;
+    padding:6px 12px; cursor:pointer; transition: border-color .15s, color .15s, background .15s;
+  }
+  .price-quick-btn:hover { border-color:var(--brass-dim); color:var(--brass); }
+  .price-quick-btn.active { border-color:var(--accent); background:var(--accent); color:#fff; }
+  .price-range-row { display:flex; align-items:center; gap:8px; }
+  .price-range-row input {
+    width:0; flex:1; font-family: var(--sans); font-size:13px; color:var(--paper);
+    background:var(--panel-2); border:1px solid var(--line); border-radius:10px; padding:8px 10px;
+  }
+  .price-range-row input:focus { outline:none; border-color:var(--brass-dim); }
+  .price-range-row span { color:var(--stone); font-size:12px; }
+  .price-range-actions { display:flex; gap:8px; margin-top:10px; }
+  .price-range-actions button {
+    font-family: var(--sans); font-size:13px; font-weight:600; color:#fff;
+    background:var(--accent); border:none; border-radius:10px; padding:8px 14px; cursor:pointer;
+  }
+  .price-range-actions button:hover { opacity:0.88; }
+
+  .filter-reset-link {
+    font-family: var(--sans); font-size:12.5px; color:var(--stone); background:none; border:none;
+    cursor:pointer; padding:9px 4px; text-decoration:underline; text-underline-offset:2px;
+  }
+  .filter-reset-link:hover { color:var(--brass); }
+  .filter-reset-link.hidden { display:none; }
+  .filter-status { font-size:12px; color:var(--stone); white-space:nowrap; }
+  .price-filter-status { font-size:11px; color:var(--stone); margin-top:6px; }
 
   /* плавное проявление иконок инфраструктуры при появлении на карте */
   @keyframes infraFadeIn {
@@ -281,8 +366,17 @@
 <div id="app">
   <div id="map"></div>
   <div id="title">
-    <h1>ЖК Москвы наизусть</h1>
+    <h1>Каталог ЖК <img class="brand-logo-inline" src="logo-highpoint.png" alt="High Point"></h1>
     <p>наведи на район — узнай его комплексы</p>
+  </div>
+  <div id="jk-search">
+    <div class="jk-search-bar">
+      <button type="button" class="jk-search-icon-btn" aria-label="Поиск ЖК">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <input type="text" id="jk-search-input" placeholder="Поиск ЖК по названию…" autocomplete="off">
+    </div>
+    <div id="jk-search-results" class="hidden"></div>
   </div>
   <div id="edit-tools">
     <button id="reset-coords-btn">Сбросить правки</button>
@@ -312,33 +406,76 @@
       <button id="videos-export-copy">Скопировать</button>
     </div>
   </div>
-  <div id="infra-toggles">
-    <div id="infra-toggles-header">
-      <div class="infra-toggles-title">Слои карты</div>
-      <div class="collapse-bar"></div>
+  <div id="filter-bar">
+    <div class="filter-btn-wrap">
+      <button type="button" class="filter-btn" data-popover="layers">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3 2 8.5 12 14l10-5.5L12 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M2 15.5 12 21l10-5.5M2 12l10 5.5L22 12" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        Слои
+      </button>
+      <div class="filter-popover" data-popover-panel="layers">
+        <div class="filter-popover-title">ЖК на карте</div>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-jk-old" checked><span class="dot" style="background:#7fa06a"></span>Старые ЖК</label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-jk-new" checked><span class="dot" style="background:#c8a15c"></span>Новые ЖК</label>
+        <div class="filter-popover-title">Районы</div>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-district-old" checked><span class="dot" style="background:#7fa06a"></span>Старые районы</label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-district-new" checked><span class="dot" style="background:#d9822c"></span>Новые районы</label>
+        <div class="filter-popover-title">Метро и линии</div>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-metro" checked><span class="dot" style="background:#d1181e"></span>Метро</label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-sadovoe" checked><span class="dot" style="background:#00838f"></span>Садовое кольцо</label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-bulvarnoe" checked><span class="dot" style="background:#6d4c41"></span>Бульварное кольцо</label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-mck" checked><span class="dot" style="background:#CC4C6E"></span>МЦК</label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-mcd" checked><span class="dot" style="background:#F5A528"></span>МЦД</label>
+      </div>
     </div>
-    <div id="infra-toggles-body">
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-jk-old" checked><span class="dot" style="background:#7fa06a"></span>Старые ЖК</label>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-jk-new" checked><span class="dot" style="background:#c8a15c"></span>Новые ЖК</label>
-      <div class="infra-toggle-divider"></div>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-district-old" checked><span class="dot" style="background:#7fa06a"></span>Старые районы</label>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-district-new" checked><span class="dot" style="background:#d9822c"></span>Новые районы</label>
-      <div class="infra-toggle-divider"></div>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-metro" checked><span class="dot" style="background:#d1181e"></span>Метро</label>
-      <div class="infra-toggle-divider"></div>
-      <div class="infra-toggles-title">Кольца и линии</div>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-sadovoe" checked><span class="dot" style="background:#00838f"></span>Садовое кольцо</label>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-bulvarnoe" checked><span class="dot" style="background:#6d4c41"></span>Бульварное кольцо</label>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-mck" checked><span class="dot" style="background:#CC4C6E"></span>МЦК</label>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-mcd" checked><span class="dot" style="background:#F5A528"></span>МЦД</label>
-      <div class="infra-toggle-divider"></div>
-      <div class="infra-toggles-title">Инфраструктура (OSM)</div>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-kindergartens"><span class="dot" style="background:#e8a33d"></span>Детские сады<span class="infra-count" id="infra-count-kindergartens">…</span></label>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-schools"><span class="dot" style="background:#4a90d9"></span>Школы<span class="infra-count" id="infra-count-schools">…</span></label>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-medical"><span class="dot" style="background:#d9534f"></span>Медицина<span class="infra-count" id="infra-count-medical">…</span></label>
-      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-business_centers"><span class="dot" style="background:#7b6fa8"></span>Бизнес-центры<span class="infra-count" id="infra-count-business_centers">…</span></label>
-      <div id="infra-zoom-hint" class="infra-zoom-hint hidden">приблизь карту, чтобы увидеть</div>
+
+    <div class="filter-btn-wrap">
+      <button type="button" class="filter-btn" data-popover="infra">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 21V9l8-6 8 6v12" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        Инфраструктура
+      </button>
+      <div class="filter-popover" data-popover-panel="infra">
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-kindergartens"><span class="dot" style="background:#e8a33d"></span>Детские сады<span class="infra-count" id="infra-count-kindergartens">…</span></label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-schools"><span class="dot" style="background:#4a90d9"></span>Школы<span class="infra-count" id="infra-count-schools">…</span></label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-medical"><span class="dot" style="background:#d9534f"></span>Медицина<span class="infra-count" id="infra-count-medical">…</span></label>
+        <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-business_centers"><span class="dot" style="background:#7b6fa8"></span>Бизнес-центры<span class="infra-count" id="infra-count-business_centers">…</span></label>
+        <div id="infra-zoom-hint" class="infra-zoom-hint hidden">приблизь карту, чтобы увидеть</div>
+      </div>
     </div>
+
+    <div class="filter-btn-wrap">
+      <button type="button" class="filter-btn" id="rooms-filter-btn" data-popover="rooms">Комнатность<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="filter-popover" data-popover-panel="rooms">
+        <div class="filter-popover-title">Комнатность</div>
+        <div class="price-quick-row" id="room-filter-row">
+          <button type="button" class="price-quick-btn" data-room="2">2к</button>
+          <button type="button" class="price-quick-btn" data-room="3">3к</button>
+          <button type="button" class="price-quick-btn" data-room="4">4к+</button>
+        </div>
+        <div class="filter-popover-title">Тип</div>
+        <div class="price-quick-row" id="type-filter-row">
+          <button type="button" class="price-quick-btn" data-type="flat">Квартиры</button>
+          <button type="button" class="price-quick-btn" data-type="apartment">Апартаменты</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-btn-wrap">
+      <button type="button" class="filter-btn" id="price-filter-btn" data-popover="price">Цена<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="filter-popover" data-popover-panel="price">
+        <div class="filter-popover-title">Цена, млн ₽</div>
+        <div class="price-range-row">
+          <input type="number" id="price-from" placeholder="от" min="0" step="0.1">
+          <span>—</span>
+          <input type="number" id="price-to" placeholder="до" min="0" step="0.1">
+        </div>
+        <div class="price-range-actions">
+          <button type="button" id="price-apply-btn">Применить</button>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" id="price-reset-btn" class="filter-reset-link hidden">Сбросить всё</button>
+    <div id="price-filter-status" class="filter-status"></div>
   </div>
   <div id="panel" class="hidden">
     <button id="panel-close">✕</button>
@@ -374,6 +511,62 @@ const byDistrict = {};
 JK.forEach(j => {
   (byDistrict[j.district_key] = byDistrict[j.district_key] || []).push(j);
 });
+
+/* разбор свободного текста jk.prices в список ценовых предложений ЖК —
+   по комнатности (студия/1/2/3/4+) и типу (квартира/апартаменты), т.к. формат
+   текста у разных ЖК разный: "1к - 24 млн", "2к (А) - 30 млн", "от 20,8 до 147 млн" и т.д. */
+function parseJkPriceEntries(text) {
+  if (!text) return [];
+  const entries = [];
+  let modeType = 'flat';
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  for (const line of lines) {
+    const low = line.toLowerCase();
+    if (!/млн/.test(low)) {
+      if (low.includes('апартамент')) modeType = 'apartment';
+      else if (low.includes('квартир')) modeType = 'flat';
+      continue;
+    }
+    const aptParen = low.match(/\(\s*а\s*\)/);
+    const aptIdx = Math.max(low.lastIndexOf('апартамент'), aptParen ? aptParen.index : -1);
+    const flatParen = low.match(/\(\s*кв\s*\)/);
+    const flatIdx = Math.max(low.lastIndexOf('квартир'), flatParen ? flatParen.index : -1);
+    const type = aptIdx > flatIdx ? 'apartment' : (flatIdx > aptIdx ? 'flat' : modeType);
+
+    let room = null;
+    let cleaned = line;
+    const studioMatch = line.match(/^студия\+?/i);
+    const roomMatch = line.match(/^(\d+)\s*к\+?/i);
+    const multiMatch = line.match(/^многокомнат/i);
+    if (studioMatch) { room = 'studio'; cleaned = line.slice(studioMatch[0].length); }
+    else if (roomMatch) { room = parseInt(roomMatch[1], 10) >= 4 ? '4' : String(parseInt(roomMatch[1], 10)); cleaned = line.slice(roomMatch[0].length); }
+    else if (multiMatch) { room = '4'; }
+
+    const nums = cleaned.match(/\d+(?:[.,]\d+)?/g);
+    if (!nums || !nums.length) continue;
+    const vals = nums.map(n => parseFloat(n.replace(',', '.'))).filter(v => !Number.isNaN(v));
+    if (!vals.length) continue;
+
+    let min = Math.min(...vals);
+    let max = Math.max(...vals);
+    if (vals.length === 1) {
+      const hasOt = /от\s*\d/i.test(cleaned);
+      const hasDo = /до\s*\d/i.test(cleaned);
+      if (hasOt && !hasDo) max = Infinity;
+      else if (hasDo && !hasOt) min = 0;
+    }
+    entries.push({ room, type, min, max });
+  }
+  /* иногда цена вообще не указана ("Апартаменты - цена по запросу"), но тип
+     сделки известен из текста — не терять этот сигнал, но и не выдумывать цену */
+  if (!entries.length) {
+    const low = text.toLowerCase();
+    if (low.includes('апартамент')) return [{ room: null, type: 'apartment', min: 0, max: Infinity }];
+    if (low.includes('квартир')) return [{ room: null, type: 'flat', min: 0, max: Infinity }];
+  }
+  return entries;
+}
+JK.forEach(jk => { jk._priceEntries = parseJkPriceEntries(jk.prices); });
 
 let activeLayer = null;
 let allLayers = [];
@@ -746,7 +939,21 @@ function skyscraperIcon(name) {
   });
 }
 
-const markersLayer = L.layerGroup().addTo(map);
+const markersLayer = L.markerClusterGroup({
+  maxClusterRadius: 48,
+  spiderfyOnMaxZoom: true,
+  showCoverageOnHover: false,
+  disableClusteringAtZoom: 14,
+  iconCreateFunction: function (cluster) {
+    const count = cluster.getChildCount();
+    const size = count >= 20 ? 44 : count >= 8 ? 38 : 32;
+    return L.divIcon({
+      html: `<div style="background:var(--accent)">${count}</div>`,
+      className: 'infra-cluster-icon',
+      iconSize: [size, size],
+    });
+  },
+}).addTo(map);
 
 function metroIcon(color) {
   const svg = `
@@ -855,20 +1062,117 @@ RING_TOGGLES.forEach(([id, layer]) => {
 /* переключатель «старые / новые ЖК» в панели слоёв */
 const jkOldToggle = document.getElementById('infra-toggle-jk-old');
 const jkNewToggle = document.getElementById('infra-toggle-jk-new');
-function jkMarkerWanted(legacy) {
-  return legacy ? !!(jkOldToggle && jkOldToggle.checked) : !!(jkNewToggle && jkNewToggle.checked);
+
+/* конструктор подбора ЖК — по комнатности, типу (квартиры/апартаменты) и цене.
+   filterRooms/filterTypes — множества выбранных кнопок (пусто = без ограничения),
+   filterPriceFrom/To — цена в млн (null = без ограничения) */
+const filterRooms = new Set();
+const filterTypes = new Set();
+let filterPriceFrom = null;
+let filterPriceTo = null;
+
+function jkConstructorMatches(jk) {
+  if (!filterRooms.size && !filterTypes.size && filterPriceFrom === null && filterPriceTo === null) return true;
+  const entries = jk._priceEntries || [];
+  if (!entries.length) return false;
+  const from = filterPriceFrom === null ? 0 : filterPriceFrom;
+  const to = filterPriceTo === null ? Infinity : filterPriceTo;
+  return entries.some(e => {
+    if (filterRooms.size && (!e.room || !filterRooms.has(e.room))) return false;
+    if (filterTypes.size && (!e.type || !filterTypes.has(e.type))) return false;
+    return e.max >= from && e.min <= to;
+  });
+}
+
+function jkMarkerWanted(entry) {
+  const layerOk = entry.legacy ? !!(jkOldToggle && jkOldToggle.checked) : !!(jkNewToggle && jkNewToggle.checked);
+  return layerOk && jkConstructorMatches(entry.jk);
 }
 function updateJkMarkerVisibility(entry) {
-  const wanted = jkMarkerWanted(entry.legacy);
+  const wanted = jkMarkerWanted(entry);
   const isShown = markersLayer.hasLayer(entry.marker);
   if (wanted && !isShown) markersLayer.addLayer(entry.marker);
   else if (!wanted && isShown) markersLayer.removeLayer(entry.marker);
 }
 function updateAllJkMarkersVisibility() {
   jkMarkers.forEach(updateJkMarkerVisibility);
+  updatePriceFilterStatus();
 }
 if (jkOldToggle) jkOldToggle.addEventListener('change', updateAllJkMarkersVisibility);
 if (jkNewToggle) jkNewToggle.addEventListener('change', updateAllJkMarkersVisibility);
+
+/* элементы управления конструктором подбора ЖК */
+const roomFilterBtns = Array.from(document.querySelectorAll('#room-filter-row .price-quick-btn'));
+const typeFilterBtns = Array.from(document.querySelectorAll('#type-filter-row .price-quick-btn'));
+const priceFromInput = document.getElementById('price-from');
+const priceToInput = document.getElementById('price-to');
+const priceApplyBtn = document.getElementById('price-apply-btn');
+const priceResetBtn = document.getElementById('price-reset-btn');
+const priceFilterStatusEl = document.getElementById('price-filter-status');
+
+const roomsFilterBtn = document.getElementById('rooms-filter-btn');
+const priceFilterBtn = document.getElementById('price-filter-btn');
+
+function updatePriceFilterStatus() {
+  const roomsActive = filterRooms.size > 0 || filterTypes.size > 0;
+  const priceActive = filterPriceFrom !== null || filterPriceTo !== null;
+  if (roomsFilterBtn) roomsFilterBtn.classList.toggle('has-active', roomsActive);
+  if (priceFilterBtn) priceFilterBtn.classList.toggle('has-active', priceActive);
+  if (priceResetBtn) priceResetBtn.classList.toggle('hidden', !(roomsActive || priceActive));
+
+  if (!priceFilterStatusEl) return;
+  if (!roomsActive && !priceActive) {
+    priceFilterStatusEl.textContent = '';
+    return;
+  }
+  const shown = jkMarkers.filter(e => jkConstructorMatches(e.jk)).length;
+  priceFilterStatusEl.textContent = `Показано ${shown} из ${jkMarkers.length} ЖК`;
+}
+
+roomFilterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const room = btn.dataset.room;
+    if (filterRooms.has(room)) { filterRooms.delete(room); btn.classList.remove('active'); }
+    else { filterRooms.add(room); btn.classList.add('active'); }
+    updateAllJkMarkersVisibility();
+  });
+});
+
+typeFilterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.type;
+    if (filterTypes.has(type)) { filterTypes.delete(type); btn.classList.remove('active'); }
+    else { filterTypes.add(type); btn.classList.add('active'); }
+    updateAllJkMarkersVisibility();
+  });
+});
+
+if (priceApplyBtn) priceApplyBtn.addEventListener('click', () => {
+  const fromVal = priceFromInput.value.trim();
+  const toVal = priceToInput.value.trim();
+  const from = fromVal === '' ? null : parseFloat(fromVal.replace(',', '.'));
+  const to = toVal === '' ? null : parseFloat(toVal.replace(',', '.'));
+  filterPriceFrom = Number.isNaN(from) ? null : from;
+  filterPriceTo = Number.isNaN(to) ? null : to;
+  updateAllJkMarkersVisibility();
+});
+
+if (priceResetBtn) priceResetBtn.addEventListener('click', () => {
+  filterRooms.clear();
+  filterTypes.clear();
+  filterPriceFrom = null;
+  filterPriceTo = null;
+  roomFilterBtns.forEach(btn => btn.classList.remove('active'));
+  typeFilterBtns.forEach(btn => btn.classList.remove('active'));
+  if (priceFromInput) priceFromInput.value = '';
+  if (priceToInput) priceToInput.value = '';
+  updateAllJkMarkersVisibility();
+});
+
+[priceFromInput, priceToInput].forEach(inp => {
+  if (!inp) return;
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') priceApplyBtn.click(); });
+});
 
 /* переключатель «старые / новые районы» в панели слоёв */
 const districtOldToggle = document.getElementById('infra-toggle-district-old');
@@ -888,19 +1192,28 @@ function updateAllDistrictLayersVisibility() {
 if (districtOldToggle) districtOldToggle.addEventListener('change', updateAllDistrictLayersVisibility);
 if (districtNewToggle) districtNewToggle.addEventListener('change', updateAllDistrictLayersVisibility);
 
-/* панель слоёв карты можно свернуть, чтобы не закрывала карту */
-const INFRA_TOGGLES_COLLAPSED_KEY = 'infraTogglesCollapsed';
-const infraTogglesEl = document.getElementById('infra-toggles');
-const infraTogglesHeader = document.getElementById('infra-toggles-header');
-if (infraTogglesEl && infraTogglesHeader) {
-  if (localStorage.getItem(INFRA_TOGGLES_COLLAPSED_KEY) === '1') {
-    infraTogglesEl.classList.add('collapsed');
-  }
-  infraTogglesHeader.addEventListener('click', () => {
-    const collapsed = infraTogglesEl.classList.toggle('collapsed');
-    localStorage.setItem(INFRA_TOGGLES_COLLAPSED_KEY, collapsed ? '1' : '0');
-  });
+/* попапы панели фильтров — открываются по клику на пилюлю, закрываются по клику
+   вне попапа, по Escape или при открытии другого попапа */
+const filterBtnWraps = Array.from(document.querySelectorAll('.filter-btn-wrap'));
+function closeAllFilterPopovers(except) {
+  filterBtnWraps.forEach(wrap => { if (wrap !== except) wrap.classList.remove('open'); });
 }
+filterBtnWraps.forEach(wrap => {
+  const btn = wrap.querySelector('.filter-btn');
+  if (!btn) return;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const willOpen = !wrap.classList.contains('open');
+    closeAllFilterPopovers(wrap);
+    wrap.classList.toggle('open', willOpen);
+  });
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.filter-btn-wrap')) closeAllFilterPopovers(null);
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeAllFilterPopovers(null);
+});
 
 /* ---------- инфраструктура OSM (детсады, школы, медицина, бизнес-центры) ---------- */
 
@@ -1007,7 +1320,14 @@ function updateInfraToggleLabel(category, count) {
   el.textContent = count === null ? ' (нет данных)' : ` (${count})`;
 }
 
-Object.keys(INFRA_LAYERS).forEach(loadInfraCategory);
+/* грузим OSM-инфраструктуру (несколько МБ) в простое время браузера, чтобы не
+   конкурировать за сеть/CPU с картой и метками ЖК на старте */
+function scheduleInfraLoad() {
+  const start = () => Object.keys(INFRA_LAYERS).forEach(loadInfraCategory);
+  if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 2000 });
+  else setTimeout(start, 300);
+}
+scheduleInfraLoad();
 
 /* слои инфраструктуры включаются галочкой, но реально появляются на карте
    только при достаточном приближении — плавным проявлением, как в Яндекс Картах */
@@ -1163,7 +1483,8 @@ function placeMarker(jk, latlng) {
   });
   const entry = { jk, marker, legacy: LEGACY_JK_NAMES.has(jk.name) };
   jkMarkers.push(entry);
-  if (jkMarkerWanted(entry.legacy)) marker.addTo(markersLayer);
+  if (jkMarkerWanted(entry)) marker.addTo(markersLayer);
+  updatePriceFilterStatus();
 }
 
 async function geocodeOne(jk) {
@@ -1198,6 +1519,87 @@ async function placeAllMarkers() {
 }
 
 placeAllMarkers().catch(e => console.error(e));
+
+/* ---------- поиск ЖК по названию ---------- */
+
+const jkSearchInput = document.getElementById('jk-search-input');
+const jkSearchResults = document.getElementById('jk-search-results');
+const jkSearchIconBtn = document.querySelector('.jk-search-icon-btn');
+if (jkSearchIconBtn) jkSearchIconBtn.addEventListener('click', () => jkSearchInput.focus());
+let jkSearchActiveIndex = -1;
+
+function jkSearchMatches(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return JK.filter(jk => jk.name.toLowerCase().includes(q)).slice(0, 8);
+}
+
+function selectJkFromSearch(jk) {
+  const entry = jkMarkers.find(e => e.jk === jk);
+  if (entry) focusJK(jk, entry.marker.getLatLng());
+  jkSearchInput.value = jk.name;
+  jkSearchResults.classList.add('hidden');
+  jkSearchInput.blur();
+}
+
+function renderJkSearchResults(query) {
+  const matches = jkSearchMatches(query);
+  jkSearchActiveIndex = -1;
+  if (!query.trim()) {
+    jkSearchResults.classList.add('hidden');
+    jkSearchResults.innerHTML = '';
+    return;
+  }
+  if (!matches.length) {
+    jkSearchResults.innerHTML = `<div class="jk-search-empty">Ничего не найдено</div>`;
+    jkSearchResults.classList.remove('hidden');
+    return;
+  }
+  jkSearchResults.innerHTML = matches.map((jk, i) => `
+    <div class="jk-search-row" data-index="${i}">
+      <span class="name">${escapeHtml(jk.name)}</span>
+      <span class="meta">${escapeHtml(jk.developer || '')}</span>
+    </div>
+  `).join('');
+  jkSearchResults.classList.remove('hidden');
+  jkSearchResults.querySelectorAll('.jk-search-row').forEach((row, i) => {
+    row.addEventListener('click', () => selectJkFromSearch(matches[i]));
+  });
+}
+
+jkSearchInput.addEventListener('input', () => renderJkSearchResults(jkSearchInput.value));
+jkSearchInput.addEventListener('focus', () => {
+  if (jkSearchInput.value.trim()) renderJkSearchResults(jkSearchInput.value);
+});
+
+jkSearchInput.addEventListener('keydown', (e) => {
+  const rows = Array.from(jkSearchResults.querySelectorAll('.jk-search-row'));
+  if (!rows.length) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    jkSearchActiveIndex = Math.min(jkSearchActiveIndex + 1, rows.length - 1);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    jkSearchActiveIndex = Math.max(jkSearchActiveIndex - 1, 0);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    const matches = jkSearchMatches(jkSearchInput.value);
+    const pick = matches[jkSearchActiveIndex >= 0 ? jkSearchActiveIndex : 0];
+    if (pick) selectJkFromSearch(pick);
+    return;
+  } else if (e.key === 'Escape') {
+    jkSearchResults.classList.add('hidden');
+    jkSearchInput.blur();
+    return;
+  } else {
+    return;
+  }
+  rows.forEach((row, i) => row.classList.toggle('active', i === jkSearchActiveIndex));
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#jk-search')) jkSearchResults.classList.add('hidden');
+});
 
 document.getElementById('reset-coords-btn').addEventListener('click', () => {
   if (!confirm('Сбросить все перемещённые метки и добавленные/удалённые ссылки на видео?')) return;
