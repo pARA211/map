@@ -1047,7 +1047,7 @@ function undoLastDrag() {
 }
 
 document.addEventListener('keydown', (e) => {
-  if (!(e.ctrlKey || e.metaKey) || e.shiftKey || e.key.toLowerCase() !== 'z') return;
+  if (!(e.ctrlKey || e.metaKey) || e.shiftKey || e.code !== 'KeyZ') return;
   const tag = document.activeElement && document.activeElement.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA') return;
   e.preventDefault();
