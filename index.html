@@ -802,9 +802,28 @@ if (mckPoints.length) mckPoints.push(mckPoints[0]);
 const mckLayer = L.polyline(mckPoints, { color: '#CC4C6E', weight: 3, opacity: 0.85 });
 ringTooltip(mckLayer, 'МЦК');
 
+/* в исходном списке METRO_STATIONS станции МЦД-1 и МЦД-2 идут не строго по ходу линии
+   (веткам на Сколково/Остафьево и задвоенной «Покровское» там не место в основном пути,
+   а «Марьина Роща» вообще не на своём месте) — из-за этого линия «зигзагала» на карте.
+   Здесь задан исправленный порядок именно для отрисовки линии; сами точки станций
+   на карте это не затрагивает. */
+const MCD_LINE_ORDER = {
+  'МЦД-1': ['Лобня','Шереметьевская','Хлебниково','Водники','Долгопрудная','Новодачная','Марк','Лианозово','Бескудниково','Дегунино','Савёловская','Тестовская','Фили','Славянский бульвар','Кунцевская','Рабочий Посёлок','Сетунь','Немчиновка','Баковка','Одинцово'],
+  'МЦД-2': ['Нахабино','Аникеевка','Опалиха','Красногорская','Павшино','Пенягино','Трикотажная','Покровское-Стрешнево','Красный Балтиец','Гражданская','Марьина Роща','Площадь трёх вокзалов','Курская','Москва Товарная','Калитники','Новохохловская','Текстильщики','Депо','Перерва','Курьяново','Москворечье','Царицыно','Красный строитель','Битца','Бутово','Щербинка','Силикатная','Подольск'],
+};
+
+function orderedStationLinePoints(lineName) {
+  const order = MCD_LINE_ORDER[lineName];
+  if (!order) return stationLinePoints(lineName);
+  return order
+    .map(name => METRO_STATIONS.find(s => s.line === lineName && s.name === name))
+    .filter(Boolean)
+    .map(s => [s.lat, s.lng]);
+}
+
 const MCD_LINES = ['МЦД-1', 'МЦД-2', 'МЦД-3', 'МЦД-4'];
 const mcdLayer = L.layerGroup(MCD_LINES.map(lineName => {
-  const pts = stationLinePoints(lineName);
+  const pts = orderedStationLinePoints(lineName);
   const st = METRO_STATIONS.find(s => s.line === lineName);
   const line = L.polyline(pts, { color: st ? st.color : '#888', weight: 2.5, opacity: 0.85 });
   ringTooltip(line, lineName);
