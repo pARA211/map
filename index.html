@@ -743,7 +743,7 @@ METRO_STATIONS.forEach(st => {
 
 /* иконки метро видны только при достаточном приближении — как в Яндекс Картах —
    и только если включен переключатель «Метро» в панели слоёв */
-const METRO_MIN_ZOOM = 12;
+const METRO_MIN_ZOOM = 14;
 const metroToggle = document.getElementById('infra-toggle-metro');
 function updateMetroVisibility() {
   const wanted = !!(metroToggle && metroToggle.checked);
