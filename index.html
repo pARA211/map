@@ -1024,6 +1024,36 @@ function saveCoordsOverride(overrides) {
 }
 let coordsOverride = loadCoordsOverride();
 
+function showEditStatus(text) {
+  const status = document.getElementById('edit-status');
+  if (!status) return;
+  status.textContent = text;
+  clearTimeout(status._t);
+  status._t = setTimeout(() => { status.textContent = ''; }, 2500);
+}
+
+/* стек отмены перемещений меток (Ctrl+Z) — хранит позицию ДО последнего drag'а,
+   чтобы можно было вернуть маркер назад, если случайно задел его мышкой */
+const dragUndoStack = [];
+
+function undoLastDrag() {
+  const entry = dragUndoStack.pop();
+  if (!entry) return;
+  entry.marker.setLatLng(entry.prevLatLng);
+  if (entry.hadOverride) coordsOverride[entry.name] = entry.prevOverrideValue;
+  else delete coordsOverride[entry.name];
+  saveCoordsOverride(coordsOverride);
+  showEditStatus(`«${entry.name}» — перемещение отменено (Ctrl+Z)`);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!(e.ctrlKey || e.metaKey) || e.shiftKey || e.key.toLowerCase() !== 'z') return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  e.preventDefault();
+  undoLastDrag();
+});
+
 const jkMarkers = [];
 function placeMarker(jk, latlng) {
   const marker = L.marker(latlng, { icon: skyscraperIcon(jk.name), riseOnHover: true, draggable: true, autoPan: true });
@@ -1032,19 +1062,24 @@ function placeMarker(jk, latlng) {
   marker.on('dragstart', () => {
     const el = marker.getElement();
     if (el) el.classList.add('dragging');
+    marker._preDragLatLng = marker.getLatLng();
+    marker._preDragHadOverride = Object.prototype.hasOwnProperty.call(coordsOverride, jk.name);
+    marker._preDragOverrideValue = coordsOverride[jk.name];
   });
   marker.on('dragend', () => {
     const el = marker.getElement();
     if (el) el.classList.remove('dragging');
     const p = marker.getLatLng();
+    dragUndoStack.push({
+      name: jk.name,
+      marker,
+      prevLatLng: marker._preDragLatLng,
+      hadOverride: marker._preDragHadOverride,
+      prevOverrideValue: marker._preDragOverrideValue,
+    });
     coordsOverride[jk.name] = [p.lat, p.lng];
     saveCoordsOverride(coordsOverride);
-    const status = document.getElementById('edit-status');
-    if (status) {
-      status.textContent = `«${jk.name}» перемещён — сохранено`;
-      clearTimeout(status._t);
-      status._t = setTimeout(() => { status.textContent = ''; }, 2500);
-    }
+    showEditStatus(`«${jk.name}» перемещён — сохранено (Ctrl+Z — отменить)`);
   });
   const entry = { jk, marker, legacy: LEGACY_JK_NAMES.has(jk.name) };
   jkMarkers.push(entry);
