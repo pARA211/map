@@ -320,6 +320,9 @@
       <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-jk-old" checked><span class="dot" style="background:#7fa06a"></span>Старые ЖК</label>
       <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-jk-new" checked><span class="dot" style="background:#c8a15c"></span>Новые ЖК</label>
       <div class="infra-toggle-divider"></div>
+      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-district-old" checked><span class="dot" style="background:#7fa06a"></span>Старые районы</label>
+      <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-district-new" checked><span class="dot" style="background:#d9822c"></span>Новые районы</label>
+      <div class="infra-toggle-divider"></div>
       <label class="infra-toggle-row"><input type="checkbox" id="infra-toggle-metro" checked><span class="dot" style="background:#d1181e"></span>Метро</label>
       <div class="infra-toggle-divider"></div>
       <div class="infra-toggles-title">Инфраструктура (OSM)</div>
@@ -365,17 +368,28 @@ JK.forEach(j => {
 
 let activeLayer = null;
 let allLayers = [];
+const districtLayers = [];
+
+/* районы, добавленные на карту позже (после первоначальных 16) — остаются жёлтыми,
+   остальные («старые») перекрашены в зеленоватый цвет */
+const NEW_DISTRICT_NAMES = new Set([
+  "Пресненский район", "район Беговой", "район Филёвский Парк", "район Кунцево", "район Очаково-Матвеевское"
+]);
 
 function styleFor(feature, state) {
   const has = (byDistrict[feature.properties.name] || []).length > 0;
+  const isNew = NEW_DISTRICT_NAMES.has(feature.properties.name);
+  const palette = isNew
+    ? { idle: '#7a5a26', idleFill: '#d9822c', hover: '#7a3f0d', hoverFill: '#e8891f', sel: '#5c2f0a', selFill: '#e8891f' }
+    : { idle: '#3f5636', idleFill: '#7fa06a', hover: '#2c4523', hoverFill: '#8fb37a', sel: '#1c2417', selFill: '#8fb37a' };
   if (state === 'hover') {
-    return { color: '#7a3f0d', weight: 2.5, fillColor:'#e8891f', fillOpacity: 0.48 };
+    return { color: palette.hover, weight: 2.5, fillColor: palette.hoverFill, fillOpacity: 0.48 };
   }
   if (state === 'selected') {
-    return { color: '#5c2f0a', weight: 3, fillColor:'#e8891f', fillOpacity: 0.55 };
+    return { color: palette.sel, weight: 3, fillColor: palette.selFill, fillOpacity: 0.55 };
   }
   if (has) {
-    return { color: '#7a5a26', weight: 1.8, fillColor:'#d9822c', fillOpacity: 0.26 };
+    return { color: palette.idle, weight: 1.8, fillColor: palette.idleFill, fillOpacity: 0.26 };
   }
   return { color: '#00000000', weight: 0, fillColor:'#000000', fillOpacity: 0.0 };
 }
@@ -387,6 +401,7 @@ const geoLayer = L.geoJSON(DISTRICTS, {
   onEachFeature: (feature, layer) => {
     allLayers.push(layer);
     layersByName[feature.properties.name] = { layer, feature };
+    districtLayers.push({ name: feature.properties.name, layer, isNew: NEW_DISTRICT_NAMES.has(feature.properties.name) });
     const list = byDistrict[feature.properties.name] || [];
     layer.bindTooltip(
       `<div class="n">${feature.properties.name}</div><div>${list.length ? list.length + ' ЖК' : 'нет ЖК в списке'}</div>`,
@@ -773,6 +788,24 @@ function updateAllJkMarkersVisibility() {
 }
 if (jkOldToggle) jkOldToggle.addEventListener('change', updateAllJkMarkersVisibility);
 if (jkNewToggle) jkNewToggle.addEventListener('change', updateAllJkMarkersVisibility);
+
+/* переключатель «старые / новые районы» в панели слоёв */
+const districtOldToggle = document.getElementById('infra-toggle-district-old');
+const districtNewToggle = document.getElementById('infra-toggle-district-new');
+function districtWanted(isNew) {
+  return isNew ? !!(districtNewToggle && districtNewToggle.checked) : !!(districtOldToggle && districtOldToggle.checked);
+}
+function updateDistrictLayerVisibility(entry) {
+  const wanted = districtWanted(entry.isNew);
+  const isShown = geoLayer.hasLayer(entry.layer);
+  if (wanted && !isShown) geoLayer.addLayer(entry.layer);
+  else if (!wanted && isShown) geoLayer.removeLayer(entry.layer);
+}
+function updateAllDistrictLayersVisibility() {
+  districtLayers.forEach(updateDistrictLayerVisibility);
+}
+if (districtOldToggle) districtOldToggle.addEventListener('change', updateAllDistrictLayersVisibility);
+if (districtNewToggle) districtNewToggle.addEventListener('change', updateAllDistrictLayersVisibility);
 
 /* панель слоёв карты можно свернуть, чтобы не закрывала карту */
 const INFRA_TOGGLES_COLLAPSED_KEY = 'infraTogglesCollapsed';
