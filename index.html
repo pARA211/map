@@ -28,6 +28,7 @@
   #app { position:relative; width:100vw; height:100vh; }
   #map { position:absolute; inset:0; background:#e7e2d4; }
   .leaflet-container { background:#e7e2d4; font-family: var(--sans); }
+  .leaflet-interactive:focus { outline:none; }
 
   /* верхний заголовок */
   #title {
@@ -380,16 +381,16 @@ function styleFor(feature, state) {
   const has = (byDistrict[feature.properties.name] || []).length > 0;
   const isNew = NEW_DISTRICT_NAMES.has(feature.properties.name);
   const palette = isNew
-    ? { idle: '#7a5a26', idleFill: '#d9822c', hover: '#7a3f0d', hoverFill: '#e8891f', sel: '#5c2f0a', selFill: '#e8891f' }
-    : { idle: '#3f5636', idleFill: '#7fa06a', hover: '#2c4523', hoverFill: '#8fb37a', sel: '#1c2417', selFill: '#8fb37a' };
+    ? { idle: '#7a5a26', idleFill: '#d9822c', idleOp: 0.26, hover: '#7a3f0d', hoverFill: '#e8891f', sel: '#5c2f0a', selFill: '#e8891f' }
+    : { idle: '#1f4d1a', idleFill: '#4f9142', idleOp: 0.4, hover: '#153512', hoverFill: '#5fae4e', sel: '#0d200b', selFill: '#5fae4e' };
   if (state === 'hover') {
-    return { color: palette.hover, weight: 2.5, fillColor: palette.hoverFill, fillOpacity: 0.48 };
+    return { color: palette.hover, weight: 2.5, fillColor: palette.hoverFill, fillOpacity: 0.55 };
   }
   if (state === 'selected') {
-    return { color: palette.sel, weight: 3, fillColor: palette.selFill, fillOpacity: 0.55 };
+    return { color: palette.sel, weight: 3, fillColor: palette.selFill, fillOpacity: 0.62 };
   }
   if (has) {
-    return { color: palette.idle, weight: 1.8, fillColor: palette.idleFill, fillOpacity: 0.26 };
+    return { color: palette.idle, weight: 1.8, fillColor: palette.idleFill, fillOpacity: palette.idleOp };
   }
   return { color: '#00000000', weight: 0, fillColor:'#000000', fillOpacity: 0.0 };
 }
