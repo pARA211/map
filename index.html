@@ -650,9 +650,8 @@ function selectDistrict(name) {
   if (entry) map.fitBounds(entry.layer.getBounds(), { paddingTopLeft:[40,40], paddingBottomRight:[420,40] });
 }
 
-function focusJK(jk, latlng) {
+function focusJK(jk) {
   focusDistrictPanel(jk.district_key);
-  map.setView(latlng, 17);
   openJK(jk, jk.district_key);
 }
 
@@ -1472,7 +1471,7 @@ const jkMarkers = [];
 function placeMarker(jk, latlng) {
   const marker = L.marker(latlng, { icon: skyscraperIcon(jk.name), riseOnHover: true, draggable: true, autoPan: true });
   marker.bindTooltip(`<div class="n">${jk.name}</div><div>${jk.developer}</div>`, { className:'district-tip', direction:'top', offset:[0,-28] });
-  marker.on('click', () => focusJK(jk, marker.getLatLng()));
+  marker.on('click', () => focusJK(jk));
   marker.on('dragstart', () => {
     const el = marker.getElement();
     if (el) el.classList.add('dragging');
@@ -1550,7 +1549,10 @@ function jkSearchMatches(query) {
 
 function selectJkFromSearch(jk) {
   const entry = jkMarkers.find(e => e.jk === jk);
-  if (entry) focusJK(jk, entry.marker.getLatLng());
+  if (entry) {
+    map.setView(entry.marker.getLatLng(), 17);
+    focusJK(jk);
+  }
   jkSearchInput.value = jk.name;
   jkSearchResults.classList.add('hidden');
   jkSearchInput.blur();
