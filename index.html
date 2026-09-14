@@ -43,6 +43,9 @@
   .leaflet-control-zoom a:hover { background:var(--panel-2) !important; color:var(--brass) !important; }
   .leaflet-control-attribution { background:var(--panel) !important; color:var(--stone) !important; }
   .leaflet-control-attribution a { color:var(--stone) !important; }
+  @media (pointer: coarse) {
+    .leaflet-control-zoom a { width:38px !important; height:38px !important; line-height:38px !important; font-size:19px !important; }
+  }
 
   /* верхний заголовок */
   #title {
@@ -67,7 +70,7 @@
     background:var(--panel); border:1px solid var(--line); box-shadow: var(--shadow);
     overflow:hidden; transition: width .25s ease;
   }
-  #jk-search:hover .jk-search-bar, #jk-search:focus-within .jk-search-bar { width:300px; }
+  #jk-search:hover .jk-search-bar, #jk-search:focus-within .jk-search-bar { width:clamp(220px, 78vw, 300px); }
   .jk-search-icon-btn {
     width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
     background:none; border:none; color:var(--brass); cursor:pointer; padding:0;
@@ -79,7 +82,7 @@
   #jk-search:hover #jk-search-input, #jk-search:focus-within #jk-search-input { opacity:1; padding-right:14px; }
   #jk-search-input::placeholder { color:var(--stone); }
   #jk-search-results {
-    display:none; position:absolute; top:50px; right:0; width:300px;
+    display:none; position:absolute; top:50px; right:0; width:clamp(220px, 78vw, 300px);
     background:var(--panel); border:1px solid var(--line); border-radius:12px;
     box-shadow: var(--shadow-lg); max-height:340px; overflow-y:auto;
   }
@@ -104,6 +107,9 @@
     box-shadow: -24px 0 48px rgba(0,0,0,0.35);
   }
   #panel.hidden { transform: translateX(100%); }
+  @media (max-width: 640px) {
+    #panel { width:100%; border-left:none; }
+  }
 
   #panel-header {
     padding:22px 24px 16px; border-bottom:1px solid var(--line);
@@ -199,15 +205,15 @@
 
   /* панель редактирования положений меток */
   #edit-tools {
-    position:absolute; bottom:20px; left:24px; z-index:500;
+    position:absolute; bottom:20px; left:24px; z-index:500; max-width:calc(100vw - 48px);
     background: var(--panel); border:1px solid var(--line);
     padding: 10px 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    display:flex; align-items:center; gap:10px;
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
   }
   #edit-tools button {
     font-family: var(--sans); font-size:12.5px; color:var(--paper);
     background:var(--panel-2); border:1px solid var(--line);
-    padding:7px 12px; cursor:pointer;
+    padding:7px 12px; cursor:pointer; white-space:nowrap;
   }
   #edit-tools button:hover { border-color:var(--brass-dim); color:var(--brass); }
   #edit-status { font-size:12px; color:var(--stone); }
@@ -1209,7 +1215,25 @@ if (districtNewToggle) districtNewToggle.addEventListener('change', updateAllDis
    вне попапа, по Escape или при открытии другого попапа */
 const filterBtnWraps = Array.from(document.querySelectorAll('.filter-btn-wrap'));
 function closeAllFilterPopovers(except) {
-  filterBtnWraps.forEach(wrap => { if (wrap !== except) wrap.classList.remove('open'); });
+  filterBtnWraps.forEach(wrap => {
+    if (wrap === except) return;
+    wrap.classList.remove('open');
+    const pop = wrap.querySelector('.filter-popover');
+    if (pop) { pop.style.left = ''; pop.style.right = ''; }
+  });
+}
+/* на узких экранах попап может не влезть по правому краю — если так, перекидываем
+   его к правому краю кнопки вместо левого, чтобы не уезжал за пределы экрана */
+function keepPopoverInViewport(wrap) {
+  const pop = wrap.querySelector('.filter-popover');
+  if (!pop) return;
+  pop.style.left = '';
+  pop.style.right = '';
+  const rect = pop.getBoundingClientRect();
+  if (rect.right > window.innerWidth - 8) {
+    pop.style.left = 'auto';
+    pop.style.right = '0';
+  }
 }
 filterBtnWraps.forEach(wrap => {
   const btn = wrap.querySelector('.filter-btn');
@@ -1219,6 +1243,7 @@ filterBtnWraps.forEach(wrap => {
     const willOpen = !wrap.classList.contains('open');
     closeAllFilterPopovers(wrap);
     wrap.classList.toggle('open', willOpen);
+    if (willOpen) keepPopoverInViewport(wrap);
   });
 });
 document.addEventListener('click', (e) => {
