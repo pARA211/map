@@ -45,6 +45,9 @@
   .leaflet-control-attribution a { color:var(--stone) !important; }
   @media (pointer: coarse) {
     .leaflet-control-zoom a { width:38px !important; height:38px !important; line-height:38px !important; font-size:19px !important; }
+    /* инструмент правки координат мышью на тач-экране бесполезен (перетаскивание меток
+       отключено) и просто занимает место — прячем */
+    #edit-tools { display:none; }
   }
 
   /* верхний заголовок */
@@ -61,6 +64,13 @@
   }
   #title h1 .brand-logo-inline { height:22px; width:auto; display:block; }
   #title p { margin:5px 0 0; font-size:12px; color:var(--stone); }
+  @media (max-width: 640px) {
+    #title { max-width:calc(100vw - 96px); padding:9px 14px; transition:opacity .15s ease; }
+    #title p { display:none; }
+    /* развёрнутая строка поиска занимает почти всю верхнюю полосу и иначе легла бы
+       поверх заголовка — на время поиска прячем заголовок вместо наложения */
+    body.jk-search-active #title { opacity:0; }
+  }
 
   /* отдельная панель поиска ЖК по названию */
   /* поиск ЖК — сворачивается в кружок с лупой, разворачивается по наведению/фокусу */
@@ -273,6 +283,17 @@
     position:absolute; top:98px; left:24px; z-index:500;
     display:flex; align-items:center; flex-wrap:wrap; gap:8px;
   }
+  @media (max-width: 640px) {
+    /* на телефоне пилюли фильтров в один ряд с горизонтальной прокруткой —
+       вместо переноса на 2 строки, которые съедали заметную часть экрана */
+    #filter-bar {
+      left:12px; right:12px; max-width:none;
+      flex-wrap:nowrap; overflow-x:auto;
+      padding:2px 2px 10px; -webkit-overflow-scrolling:touch;
+    }
+    #filter-bar::-webkit-scrollbar { display:none; }
+    .filter-btn-wrap, #price-reset-btn, #price-filter-status { flex-shrink:0; }
+  }
   .filter-btn-wrap { position:relative; }
   .filter-btn {
     display:flex; align-items:center; gap:7px; font-family:var(--sans); font-size:13px; font-weight:600;
@@ -288,7 +309,9 @@
   .filter-btn.has-active .chev { color:var(--accent); }
 
   .filter-popover {
-    display:none; position:absolute; top:calc(100% + 8px); left:0; z-index:560;
+    /* position:fixed + координаты, выставленные в JS (positionFilterPopover) — так попап
+       не зависит от прокручиваемого #filter-bar на мобильном и не обрезается им */
+    display:none; position:fixed; z-index:560;
     background:var(--panel); border:1px solid var(--line); border-radius:14px;
     box-shadow: var(--shadow-lg); padding:14px 16px; min-width:230px;
     max-height:70vh; overflow-y:auto;
@@ -1211,29 +1234,48 @@ function updateAllDistrictLayersVisibility() {
 if (districtOldToggle) districtOldToggle.addEventListener('change', updateAllDistrictLayersVisibility);
 if (districtNewToggle) districtNewToggle.addEventListener('change', updateAllDistrictLayersVisibility);
 
+/* на телефоне высоту заголовка заранее не угадать (перенос строк, масштаб шрифта) —
+   ставим панель фильтров сразу под ним по факту рендера, а не по зашитому top:98px
+   (который на мобильном мог наезжать на заголовок/поиск) */
+const titleEl = document.getElementById('title');
+const filterBarEl = document.getElementById('filter-bar');
+function layoutMobileHud() {
+  if (window.innerWidth > 640 || !titleEl || !filterBarEl) {
+    if (filterBarEl) filterBarEl.style.top = '';
+    return;
+  }
+  const rect = titleEl.getBoundingClientRect();
+  filterBarEl.style.top = Math.round(rect.bottom + 10) + 'px';
+}
+window.addEventListener('resize', layoutMobileHud);
+window.addEventListener('orientationchange', layoutMobileHud);
+layoutMobileHud();
+
 /* попапы панели фильтров — открываются по клику на пилюлю, закрываются по клику
    вне попапа, по Escape или при открытии другого попапа */
 const filterBtnWraps = Array.from(document.querySelectorAll('.filter-btn-wrap'));
 function closeAllFilterPopovers(except) {
-  filterBtnWraps.forEach(wrap => {
-    if (wrap === except) return;
-    wrap.classList.remove('open');
-    const pop = wrap.querySelector('.filter-popover');
-    if (pop) { pop.style.left = ''; pop.style.right = ''; }
-  });
+  filterBtnWraps.forEach(wrap => { if (wrap !== except) wrap.classList.remove('open'); });
 }
-/* на узких экранах попап может не влезть по правому краю — если так, перекидываем
-   его к правому краю кнопки вместо левого, чтобы не уезжал за пределы экрана */
-function keepPopoverInViewport(wrap) {
+/* попап — position:fixed, координаты считаем от кнопки в JS: на мобильном ряд пилюль
+   прокручивается горизонтально, и position:absolute относительно кнопки обрезался бы
+   контейнером-скроллом; заодно не даёт попапу уехать за правый/нижний край экрана */
+function positionFilterPopover(wrap) {
+  const btn = wrap.querySelector('.filter-btn');
   const pop = wrap.querySelector('.filter-popover');
-  if (!pop) return;
-  pop.style.left = '';
-  pop.style.right = '';
-  const rect = pop.getBoundingClientRect();
-  if (rect.right > window.innerWidth - 8) {
-    pop.style.left = 'auto';
-    pop.style.right = '0';
+  if (!btn || !pop) return;
+  const btnRect = btn.getBoundingClientRect();
+  const popRect = pop.getBoundingClientRect();
+  let left = btnRect.left;
+  if (left + popRect.width > window.innerWidth - 8) {
+    left = Math.max(8, window.innerWidth - popRect.width - 8);
   }
+  let top = btnRect.bottom + 8;
+  if (top + popRect.height > window.innerHeight - 8) {
+    top = Math.max(8, window.innerHeight - popRect.height - 8);
+  }
+  pop.style.left = left + 'px';
+  pop.style.top = top + 'px';
 }
 filterBtnWraps.forEach(wrap => {
   const btn = wrap.querySelector('.filter-btn');
@@ -1243,7 +1285,7 @@ filterBtnWraps.forEach(wrap => {
     const willOpen = !wrap.classList.contains('open');
     closeAllFilterPopovers(wrap);
     wrap.classList.toggle('open', willOpen);
-    if (willOpen) keepPopoverInViewport(wrap);
+    if (willOpen) positionFilterPopover(wrap);
   });
 });
 document.addEventListener('click', (e) => {
@@ -1492,9 +1534,14 @@ document.addEventListener('keydown', (e) => {
   undoLastDrag();
 });
 
+/* перетаскивание меток — инструмент для правки координат с рабочего стола (мышью).
+   На тач-экране обычный жест панорамирования картой рядом с меткой Leaflet распознаёт
+   как drag метки, и она незаметно "съезжает" (правка тут же уходит в localStorage) —
+   поэтому на touch-устройствах перетаскивание меток отключаем. */
+const IS_TOUCH = window.matchMedia('(pointer: coarse)').matches;
 const jkMarkers = [];
 function placeMarker(jk, latlng) {
-  const marker = L.marker(latlng, { icon: skyscraperIcon(jk.name), riseOnHover: true, draggable: true, autoPan: true });
+  const marker = L.marker(latlng, { icon: skyscraperIcon(jk.name), riseOnHover: true, draggable: !IS_TOUCH, autoPan: true });
   marker.bindTooltip(`<div class="n">${jk.name}</div><div>${jk.developer}</div>`, { className:'district-tip', direction:'top', offset:[0,-28] });
   marker.on('click', () => focusJK(jk));
   marker.on('dragstart', () => {
@@ -1611,7 +1658,11 @@ function renderJkSearchResults(query) {
 jkSearchInput.addEventListener('input', () => renderJkSearchResults(jkSearchInput.value));
 jkSearchInput.addEventListener('focus', () => {
   if (jkSearchInput.value.trim()) renderJkSearchResults(jkSearchInput.value);
+  /* на телефоне развёрнутая строка поиска перекрывает заголовок в той же строке —
+     на время поиска прячем заголовок, а не даём им наезжать друг на друга */
+  document.body.classList.add('jk-search-active');
 });
+jkSearchInput.addEventListener('blur', () => document.body.classList.remove('jk-search-active'));
 
 jkSearchInput.addEventListener('keydown', (e) => {
   const rows = Array.from(jkSearchResults.querySelectorAll('.jk-search-row'));
